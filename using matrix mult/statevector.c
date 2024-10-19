@@ -10,6 +10,7 @@ void create_cnot_matrix(double *matrix, int num_qubits, int control_qubit, int t
 void print_statevector(double *statevector, int num_qubits);
 void save_runtime_data(int num_qubits, double time_taken);
 double test_runtime(int num_qubit);
+void run_test(int num_qubits);
 
 int main(void) {
     int num_qubits = 3;  // Example with 3 qubits
@@ -58,8 +59,11 @@ int main(void) {
         save_runtime_data(num_qubit, time_taken);     // Save the result to file
     }
 
+    for (int num_qubits = 2; num_qubits <= 4; num_qubits++) {
+        run_test(num_qubits);
+    }
 
-    // Free memory
+
     free(statevector);
     free(full_X_matrix);
     free(full_H_matrix);
@@ -213,4 +217,52 @@ double test_runtime(int num_qubit) {
 
     // Return the time taken
     return time_taken;
+}
+
+void run_test(int num_qubits) {
+    int dim = 1 << num_qubits;
+    double* statevector = (double*) malloc(dim * sizeof(double));
+    
+    // Initialize state to |0...0>
+    statevector[0] = 1.0;
+    for (int i = 1; i < dim; i++) {
+        statevector[i] = 0.0;
+    }
+
+    printf("Testing %d qubit circuit:\n", num_qubits);
+    printf("Initial state:\n");
+    print_statevector(statevector, num_qubits);
+
+    // Define gates
+    double X[4] = {0.0, 1.0, 1.0, 0.0};  // Pauli-X
+    double H[4] = {1.0/sqrt(2), 1.0/sqrt(2), 1.0/sqrt(2), -1.0/sqrt(2)};  // Hadamard
+
+    // Apply X to last qubit
+    double* full_X_matrix = (double*) malloc(dim * dim * sizeof(double));
+    create_single_qubit_gate_matrix(full_X_matrix, X, num_qubits, num_qubits - 1);
+    apply_matrix(statevector, full_X_matrix, dim);
+    printf("After X on qubit %d:\n", num_qubits - 1);
+    print_statevector(statevector, num_qubits);
+
+    // Apply H to first qubit
+    double* full_H_matrix = (double*) malloc(dim * dim * sizeof(double));
+    create_single_qubit_gate_matrix(full_H_matrix, H, num_qubits, 0);
+    apply_matrix(statevector, full_H_matrix, dim);
+    printf("After H on qubit 0:\n");
+    print_statevector(statevector, num_qubits);
+
+    // Apply CNOT with control on first qubit and target on last qubit
+    double* cnot_matrix = (double*) malloc(dim * dim * sizeof(double));
+    create_cnot_matrix(cnot_matrix, num_qubits, 0, num_qubits - 1);
+    apply_matrix(statevector, cnot_matrix, dim);
+    printf("After CNOT (control: 0, target: %d):\n", num_qubits - 1);
+    print_statevector(statevector, num_qubits);
+
+    // Free memory
+    free(statevector);
+    free(full_X_matrix);
+    free(full_H_matrix);
+    free(cnot_matrix);
+
+    printf("\n");
 }
