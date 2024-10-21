@@ -13,7 +13,7 @@ double test_runtime(int num_qubit);
 
 int main(void) {
 
-    int num_qubit = 3;
+    int num_qubit = 4;
     double* statevector = (double*) malloc((1 << num_qubit) * sizeof(double));
 
     for (int i = 0; i < (1 << num_qubit); i++) {
@@ -35,12 +35,14 @@ int main(void) {
     print_statevector(statevector, num_qubit);
     
 
-    int max_qubits = 15;  // Maximum number of qubits to simulate
+    //TESTING AREA
 
-    for (int num_qubit = 1; num_qubit <= max_qubits; num_qubit++) {
-        double time_taken = test_runtime(num_qubit);  // Test runtime for current number of qubits
-        save_runtime_data(num_qubit, time_taken);     // Save the result to file
-    }
+    // int max_qubits = 25;  // Maximum number of qubits to simulate
+
+    // for (int num_qubit = 1; num_qubit <= max_qubits; num_qubit++) {
+    //     double time_taken = test_runtime(num_qubit);  // Test runtime for current number of qubits
+    //     save_runtime_data(num_qubit, time_taken);     // Save the result to file
+    // }
 
 
     free(statevector);

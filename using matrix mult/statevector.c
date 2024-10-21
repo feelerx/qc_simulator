@@ -3,7 +3,6 @@
 #include <math.h>
 #include <time.h>
 
-void kronecker(double* A, int rowsA, int colsA, double* B, int rowsB, int colsB, double* result);
 void apply_matrix(double *statevector, double *matrix, int size);
 void create_single_qubit_gate_matrix(double *matrix, double *gate, int num_qubits, int target_qubit);
 void create_cnot_matrix(double *matrix, int num_qubits, int control_qubit, int target_qubit);
@@ -24,44 +23,45 @@ int main(void) {
     }
 
     // Print initial statevector
-    print_statevector(statevector, num_qubits);
+   // print_statevector(statevector, num_qubits);
 
     // Define X and H matrices
     double X[4] = {0.0, 1.0, 1.0, 0.0};  // Pauli-X matrix
     double H[4] = {1.0/sqrt(2), 1.0/sqrt(2), 1.0/sqrt(2), -1.0/sqrt(2)};  // Hadamard matrix
+    double T_real[4] = {1.0, 0.0, 0.0, sqrt(2) / 2};  // Real part of T gate
 
     // Create and apply X gate on qubit 1 (target qubit)
     double* full_X_matrix = (double*) malloc(dim * dim * sizeof(double));
-    create_single_qubit_gate_matrix(full_X_matrix, X, num_qubits, 2);
+    create_single_qubit_gate_matrix(full_X_matrix, X, num_qubits, 0);
     apply_matrix(statevector, full_X_matrix, dim);
-    print_statevector(statevector, num_qubits);
+    //print_statevector(statevector, num_qubits);
 
     // Create and apply H gate on qubit 0 (target qubit)
     double* full_H_matrix = (double*) malloc(dim * dim * sizeof(double));
     create_single_qubit_gate_matrix(full_H_matrix, H, num_qubits, 1);
     apply_matrix(statevector, full_H_matrix, dim);
-    print_statevector(statevector, num_qubits);
+    // print_statevector(statevector, num_qubits);
 
     // Define and create the CNOT matrix (control = qubit 0, target = qubit 1)
     double* cnot_matrix = (double*) malloc(dim * dim * sizeof(double));
-    create_cnot_matrix(cnot_matrix, num_qubits, 0, 2);
+    create_cnot_matrix(cnot_matrix, num_qubits, 0, 1);
     // Apply the CNOT matrix to the statevector
     apply_matrix(statevector, cnot_matrix, dim);
-    print_statevector(statevector, num_qubits);
+    // print_statevector(statevector, num_qubits);
 
 
-    //TESTING AREA
+    // TESTING AREA
 
-    int max_qubits = 15;  // Maximum number of qubits to simulate
+    int max_qubits = 14;  // Maximum number of qubits to simulate
 
     for (int num_qubit = 1; num_qubit <= max_qubits; num_qubit++) {
         double time_taken = test_runtime(num_qubit);  // Test runtime for current number of qubits
         save_runtime_data(num_qubit, time_taken);     // Save the result to file
     }
 
-    for (int num_qubits = 2; num_qubits <= 4; num_qubits++) {
-        run_test(num_qubits);
-    }
+    // for (int num_qubits = 2; num_qubits <= 4; num_qubits++) {
+    //     run_test(num_qubits);
+    // }
 
 
     free(statevector);
@@ -72,18 +72,6 @@ int main(void) {
     return 0;
 }
 
-// Function to calculate Kronecker product of two matrices
-void kronecker(double* A, int rowsA, int colsA, double* B, int rowsB, int colsB, double* result) {
-    for (int i = 0; i < rowsA; i++) {
-        for (int j = 0; j < colsA; j++) {
-            for (int k = 0; k < rowsB; k++) {
-                for (int l = 0; l < colsB; l++) {
-                    result[(i * rowsB + k) * (colsA * colsB) + (j * colsB + l)] = A[i * colsA + j] * B[k * colsB + l];
-                }
-            }
-        }
-    }
-}
 
 // General function to apply a gate to the statevector using matrix multiplication
 void apply_matrix(double *statevector, double *matrix, int size) {
