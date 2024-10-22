@@ -1,6 +1,6 @@
 # qc_simulator
 
-Implemented the simple simulator using 3 approaches.
+Implemented the simple simulator using 3 approaches in C.
 
 Every approach should be run differently. 
 
