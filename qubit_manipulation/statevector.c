@@ -35,14 +35,14 @@ int main(void) {
     print_statevector(statevector, num_qubit);
     
 
-    //TESTING AREA
+    // TESTING AREA
 
-    // int max_qubits = 25;  // Maximum number of qubits to simulate
+    int max_qubits = 28;  // Maximum number of qubits to simulate
 
-    // for (int num_qubit = 1; num_qubit <= max_qubits; num_qubit++) {
-    //     double time_taken = test_runtime(num_qubit);  // Test runtime for current number of qubits
-    //     save_runtime_data(num_qubit, time_taken);     // Save the result to file
-    // }
+    for (int num_qubit = 1; num_qubit <= max_qubits; num_qubit++) {
+        double time_taken = test_runtime(num_qubit);  // Test runtime for current number of qubits
+        save_runtime_data(num_qubit, time_taken);     // Save the result to file
+    }
 
 
     free(statevector);
