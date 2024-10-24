@@ -12,7 +12,7 @@ When the file is created, run "python plot.py" to see a graph of qubits and time
 
 For the Matrix_mult, we see that around 14 qubits can be simulated before results start shooting up.
 
-For the Tensor_mult, we see that number improve to around 30 qubits.
+For the Tensor_mult, we see that number improve to around 20 qubits.
 
 
 Future Possible Work:
